@@ -95,8 +95,7 @@ def _cfg_nav_link_filter(cfg: dict[str, Any]) -> set[str] | None:
     return None
 
 
-# Default OData field per incremental mode. Verified live on the
-# configured ODK server (https://odk.mowsa.openg2p.org):
+# Default OData field per incremental mode:
 #   - __system/submissionDate -> $filter + $orderby return 200
 #   - __system/updatedAt      -> Edm.DateTimeOffset (works similarly)
 #   - __id                    -> $filter + $orderby return 501.5

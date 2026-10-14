@@ -21,7 +21,7 @@ const proxyOpts = {
         res.writeHead(502, { 'Content-Type': 'application/json' })
         res.end(
           JSON.stringify({
-            detail: `Cannot reach ${connectorApiTarget}. Connect WireGuard (UD/EDRMC) or run npm run dev:local.`,
+            detail: `Cannot reach ${connectorApiTarget}. Start the Connector API or set VITE_DEV_CONNECTOR_PROXY_TARGET.`,
           })
         )
       }

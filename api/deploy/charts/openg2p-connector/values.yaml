@@ -1,14 +1,14 @@
 global:
-  hostname: connector.nsr.openg2p.org
-  postgresqlHost: commons-postgresql
+  hostname: connector.example.org
+  postgresqlHost: postgresql
   postgresqlPort: 5432
-  redisHost: nsr-redis-master
+  redisHost: redis-master
   redisPort: 6379
-  partnerApiService: nsr-partner-api
-  connectorDB: nsr_connector
-  connectorDBUser: nsr_connector_user
-  connectorDBSecret: nsr-connector
-  connectorDBUserPasswordKey: nsr-connector-db-user
+  partnerApiService: partner-api
+  connectorDB: connector
+  connectorDBUser: connector_user
+  connectorDBSecret: connector
+  connectorDBUserPasswordKey: connector-db-user
   metadataDsnSecret: ""
   masterDataDsnKey: master_data_dsn
   registryDsnKey: registry_db_dsn
@@ -22,7 +22,7 @@ commonEnv:
   CONNECTOR_STRICT_INCREMENTAL: "true"
   CONNECTOR_FULL_SCAN_ON_INCREMENTAL_UNSUPPORTED: "false"
   CONNECTOR_METRICS_ENABLED: "true"
-  CONNECTOR_CORS_ORIGINS: https://connector.nsr.openg2p.org
+  CONNECTOR_CORS_ORIGINS: https://connector.example.org
 
 postgresCheckerInit:
   enabled: true
@@ -33,7 +33,7 @@ api:
   replicaCount: 1
   image:
     repository: openg2p/openg2p-connector-service
-    tag: nsr
+    tag: latest
     pullPolicy: Always
   command:
     - api
@@ -68,7 +68,7 @@ worker:
   replicaCount: 1
   image:
     repository: openg2p/openg2p-connector-service
-    tag: nsr
+    tag: latest
     pullPolicy: Always
   command:
     - worker
@@ -79,7 +79,7 @@ beat:
   replicaCount: 1
   image:
     repository: openg2p/openg2p-connector-service
-    tag: nsr
+    tag: latest
     pullPolicy: Always
   command:
     - beat
@@ -90,7 +90,7 @@ consumer:
   replicaCount: 1
   image:
     repository: openg2p/openg2p-connector-service
-    tag: nsr
+    tag: latest
     pullPolicy: Always
   command:
     - consumer
@@ -101,7 +101,7 @@ ui:
   replicaCount: 1
   image:
     repository: openg2p/openg2p-connector-ui
-    tag: nsr
+    tag: latest
     pullPolicy: Always
   service:
     port: 80

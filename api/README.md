@@ -108,13 +108,13 @@ the old global `CONNECTOR_ODK_*` env vars):
 
 ```json
 {
-  "name": "EDRMC WebSub",
-  "platform": "edrmc_websub",
+  "name": "Partner WebSub",
+  "platform": "partner_websub",
   "transport_type": "websub",
-  "webhook_path_slug": "edrmc-websub",
+  "webhook_path_slug": "partner-websub",
   "webhook_verifier": "hmac_sha256",
   "webhook_secret": "<hub-secret>",
-  "source_config_json": "{\"hub_url\":\"https://websub.example.org/hub\",\"partner_id\":\"openg2p-nsr-edrmc-consumer\",\"callback_url\":\"https://connector.example.org/webhook/by-slug/edrmc-websub\"}"
+  "source_config_json": "{\"hub_url\":\"https://websub.example.org/hub\",\"partner_id\":\"connector-websub-consumer\",\"callback_url\":\"https://connector.example.org/webhook/by-slug/partner-websub\"}"
 }
 ```
 

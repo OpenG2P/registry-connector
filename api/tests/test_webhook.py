@@ -112,15 +112,15 @@ async def test_webhook_by_slug(app_client):
 async def test_websub_uses_webhook_delivery_path(app_client):
     resp = await app_client.post("/connectors", json=connector_json(
         name="WebSub Push",
-        platform="edrmc_websub",
+        platform="partner_websub",
         transport_type="websub",
-        webhook_path_slug="edrmc-websub",
+        webhook_path_slug="partner-websub",
     ))
     assert resp.status_code == 201
     cid = resp.json()["connector_id"]
 
     resp = await app_client.post(
-        "/webhook/by-slug/edrmc-websub",
+        "/webhook/by-slug/partner-websub",
         json={"source_event_id": "websub-evt", "data": {"a": 1}},
     )
     assert resp.status_code == 200
@@ -133,17 +133,17 @@ async def test_websub_uses_webhook_delivery_path(app_client):
 async def test_websub_challenge_by_slug(app_client):
     resp = await app_client.post("/connectors", json=connector_json(
         name="WebSub Challenge",
-        platform="edrmc_websub",
+        platform="partner_websub",
         transport_type="websub",
-        webhook_path_slug="edrmc-challenge",
+        webhook_path_slug="websub-challenge",
     ))
     assert resp.status_code == 201
 
     resp = await app_client.get(
-        "/webhook/by-slug/edrmc-challenge",
+        "/webhook/by-slug/websub-challenge",
         params={
             "hub.mode": "subscribe",
-            "hub.topic": "edrmc-topic",
+            "hub.topic": "example-topic",
             "hub.challenge": "challenge-token",
         },
     )

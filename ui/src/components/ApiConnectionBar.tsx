@@ -65,7 +65,7 @@ export default function ApiConnectionBar() {
           not reachable
           {detail ? ` (${detail})` : ""}
           {" — "}
-          connect <strong>UD</strong> or <strong>EDRMC</strong> WireGuard, then{" "}
+          check the API is running, then{" "}
           <code className="text-xs">npm run dev</code>
         </span>
       )}

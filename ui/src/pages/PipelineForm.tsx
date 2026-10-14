@@ -9,8 +9,6 @@ import type {
   MetadataList,
 } from "../api/types";
 import Card from "../components/Card";
-import { EDRMC_WEBSUB_UD } from "../lib/edrmc-websub-template";
-
 const CURSOR_KEYS = [
   "incremental_field",
   "incremental_mode",
@@ -270,23 +268,6 @@ export default function PipelineForm() {
             {isEdit ? "Edit Pipeline" : "New Pipeline"}
           </h1>
         </div>
-        {!isEdit && (
-          <button
-            type="button"
-            className="px-3 py-1.5 text-sm rounded-[10px] border border-primary-second bg-primary-first/20 text-neutral-first hover:bg-primary-first/30"
-            onClick={() => {
-              setForm({
-                ...EMPTY,
-                ...EDRMC_WEBSUB_UD,
-                auth_secret_json: "",
-                webhook_secret: "",
-              });
-              setExtras(parseSourceConfig(EDRMC_WEBSUB_UD.source_config_json));
-            }}
-          >
-            Apply EDRMC → UD WebSub template
-          </button>
-        )}
       </div>
 
       {error && (

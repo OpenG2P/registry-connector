@@ -102,7 +102,7 @@ export const api = {
       { method: "POST" }
     ),
 
-  /** Register + subscribe this connector’s callback URL at the WebSub hub (EDRMC, etc.). */
+  /** Register + subscribe this connector’s callback URL at the WebSub hub. */
   websubSyncSubscriptions: (id: string) =>
     request<WebSubSyncResponse>(
       `/connectors/${id}/websub/sync-subscriptions`,

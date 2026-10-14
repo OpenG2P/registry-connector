@@ -197,7 +197,7 @@ async def clear_idempotency(connector_id: str):
 
 @router.post("/{connector_id}/websub/sync-subscriptions")
 async def websub_sync_subscriptions(connector_id: str):
-    """Register and subscribe this connector's callback with the WebSub hub (EDRMC, etc.).
+    """Register and subscribe this connector's callback with the WebSub hub.
 
     Reads ``hub_url``, ``callback_url``, and ``topics`` (or ``partner_id``) from
     ``source_config_json``; uses ``auth_secret_json`` for OAuth and ``webhook_secret``

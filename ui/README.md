@@ -30,14 +30,14 @@ VITE_CONNECTOR_API_BASE_URL=http://localhost:8050
 Then enable CORS on the connector service:
 
 ```bash
-# In openg2p-connector-service/.env:
+# In api/.env:
 CONNECTOR_CORS_ORIGINS=http://localhost:5173,http://127.0.0.1:5173
 ```
 
-Point the dev proxy at a remote API (e.g. UD) without changing the UI env:
+Point the dev proxy at another API host:
 
 ```bash
-VITE_DEV_CONNECTOR_PROXY_TARGET=https://connector-nsr.ud.mowsa.gov.et npm run dev
+VITE_DEV_CONNECTOR_PROXY_TARGET=https://connector.example.org npm run dev
 ```
 
 ## Features

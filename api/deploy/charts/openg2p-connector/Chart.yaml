@@ -3,7 +3,7 @@ name: openg2p-connector
 description: OpenG2P Connector workloads
 type: application
 version: 0.1.0
-appVersion: "kif"
+appVersion: "0.1.0"
 dependencies:
   - name: postgres-init
     version: 0.0.0-develop
