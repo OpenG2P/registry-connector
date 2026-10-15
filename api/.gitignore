@@ -1,0 +1,21 @@
+.git
+.pytest_cache
+.venv
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+.env
+.env.*
+!.env.example
+
+connector.db
+celerybeat-schedule.db
+
+node_modules/
+dist/
+build/
+
+# Helm packaged deps — run: helm dependency update api/deploy/charts/openg2p-connector
+api/deploy/charts/*/charts/*.tgz
