@@ -17,5 +17,5 @@ node_modules/
 dist/
 build/
 
-# Helm packaged deps — run: helm dependency update api/deploy/charts/openg2p-connector
+# Helm packaged deps — run: helm dependency update deployments/charts/registry-connector
 api/deploy/charts/*/charts/*.tgz

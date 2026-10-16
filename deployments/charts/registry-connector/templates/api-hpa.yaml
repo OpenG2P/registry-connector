@@ -2,15 +2,15 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "openg2p-connector.fullname" . }}-api
+  name: {{ include "registry-connector.fullname" . }}-api
   labels:
-    {{- include "openg2p-connector.labels" . | nindent 4 }}
+    {{- include "registry-connector.labels" . | nindent 4 }}
     app.kubernetes.io/component: api
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ include "openg2p-connector.fullname" . }}-api
+    name: {{ include "registry-connector.fullname" . }}-api
   minReplicas: {{ .Values.api.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.api.autoscaling.maxReplicas }}
   metrics:
