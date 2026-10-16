@@ -2,9 +2,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "openg2p-connector.fullname" . }}-api
+  name: {{ include "registry-connector.fullname" . }}-api
   labels:
-    {{- include "openg2p-connector.labels" . | nindent 4 }}
+    {{- include "registry-connector.labels" . | nindent 4 }}
     app.kubernetes.io/component: api
 spec:
   {{- if not .Values.api.autoscaling.enabled }}
@@ -12,15 +12,15 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      {{- include "openg2p-connector.selectorLabels" . | nindent 6 }}
+      {{- include "registry-connector.selectorLabels" . | nindent 6 }}
       app.kubernetes.io/component: api
   template:
     metadata:
       labels:
-        {{- include "openg2p-connector.selectorLabels" . | nindent 8 }}
+        {{- include "registry-connector.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: api
     spec:
-      serviceAccountName: {{ include "openg2p-connector.serviceAccountName" . }}
+      serviceAccountName: {{ include "registry-connector.serviceAccountName" . }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -32,13 +32,13 @@ spec:
           imagePullPolicy: IfNotPresent
           command: ["sh"]
           args:
-            {{- include "openg2p-connector.postgresWaitArgs" . | nindent 12 }}
+            {{- include "registry-connector.postgresWaitArgs" . | nindent 12 }}
           env:
-            {{- include "openg2p-connector.commonEnv" . | nindent 12 }}
+            {{- include "registry-connector.commonEnv" . | nindent 12 }}
       {{- end }}
       containers:
         - name: connector-api
-          image: {{ include "openg2p-connector.image" . }}
+          image: {{ include "registry-connector.image" . }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             {{- toYaml .Values.api.args | nindent 12 }}
@@ -47,7 +47,7 @@ spec:
               containerPort: {{ .Values.api.service.targetPort }}
               protocol: TCP
           env:
-            {{- include "openg2p-connector.commonEnv" . | nindent 12 }}
+            {{- include "registry-connector.commonEnv" . | nindent 12 }}
           startupProbe:
             httpGet:
               path: /health

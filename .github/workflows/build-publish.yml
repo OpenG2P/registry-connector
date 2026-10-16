@@ -28,19 +28,19 @@ jobs:
       images: |
         [
           {
-            "name": "connector-service",
-            "repo": "openg2p/connector-service",
-            "dockerfile": "docker/connector-service/Dockerfile"
+            "name": "registry-connector-api",
+            "repo": "openg2p/registry-connector-api",
+            "dockerfile": "docker/registry-connector-api/Dockerfile"
           },
           {
-            "name": "connector-ui",
-            "repo": "openg2p/connector-ui",
-            "dockerfile": "docker/connector-ui/Dockerfile",
+            "name": "registry-connector-ui",
+            "repo": "openg2p/registry-connector-ui",
+            "dockerfile": "docker/registry-connector-ui/Dockerfile",
             "context": "ui"
           }
         ]
 
-      chart-path: deployments/charts/openg2p-connector
+      chart-path: deployments/charts/registry-connector
 
       chart-image-paths: |
         [".image.tag", ".ui.image.tag"]

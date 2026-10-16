@@ -1,4 +1,4 @@
-# OpenG2P Connector
+# OpenG2P Registry Connector
 
 Multi-transport ingestion gateway: ODK Central, webhooks, and event buses into
 the OpenG2P registry Partner API (`POST /partner/ingest_data`).

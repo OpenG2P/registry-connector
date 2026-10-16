@@ -21,7 +21,7 @@ imagePullSecrets: []
 
 # Shared runtime image for api / worker / beat / consumer.
 image:
-  repository: openg2p/connector-service
+  repository: openg2p/registry-connector-api
   tag: develop
   pullPolicy: Always
 
@@ -107,7 +107,7 @@ ui:
   enabled: false
   replicaCount: 1
   image:
-    repository: openg2p/connector-ui
+    repository: openg2p/registry-connector-ui
     tag: develop
     pullPolicy: Always
   service:

@@ -2,9 +2,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "openg2p-connector.fullname" . }}-ui
+  name: {{ include "registry-connector.fullname" . }}-ui
   labels:
-    {{- include "openg2p-connector.labels" . | nindent 4 }}
+    {{- include "registry-connector.labels" . | nindent 4 }}
     app.kubernetes.io/component: ui
 spec:
   type: ClusterIP
@@ -14,6 +14,6 @@ spec:
       targetPort: {{ .Values.ui.service.targetPort }}
       protocol: TCP
   selector:
-    {{- include "openg2p-connector.selectorLabels" . | nindent 4 }}
+    {{- include "registry-connector.selectorLabels" . | nindent 4 }}
     app.kubernetes.io/component: ui
 {{- end }}

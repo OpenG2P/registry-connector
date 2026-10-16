@@ -2,15 +2,15 @@
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: {{ include "openg2p-connector.fullname" . }}
+  name: {{ include "registry-connector.fullname" . }}
   labels:
-    {{- include "openg2p-connector.labels" . | nindent 4 }}
+    {{- include "registry-connector.labels" . | nindent 4 }}
 spec:
   hosts:
     - {{ .Values.global.connectorHostname | quote }}
   gateways:
     {{- if .Values.istio.gateway.create }}
-    - {{ include "openg2p-connector.fullname" . }}-gateway
+    - {{ include "registry-connector.fullname" . }}-gateway
     {{- else }}
     - {{ .Values.istio.virtualservice.gateway | quote }}
     {{- end }}
@@ -22,7 +22,7 @@ spec:
             prefix: {{ . | quote }}
       route:
         - destination:
-            host: {{ include "openg2p-connector.fullname" $ }}-api
+            host: {{ include "registry-connector.fullname" $ }}-api
             port:
               number: {{ $.Values.api.service.port }}
     {{- end }}
@@ -31,7 +31,7 @@ spec:
             prefix: /
       route:
         - destination:
-            host: {{ include "openg2p-connector.fullname" . }}-ui
+            host: {{ include "registry-connector.fullname" . }}-ui
             port:
               number: {{ .Values.ui.service.port }}
     {{- else }}
@@ -40,7 +40,7 @@ spec:
             prefix: /
       route:
         - destination:
-            host: {{ include "openg2p-connector.fullname" . }}-api
+            host: {{ include "registry-connector.fullname" . }}-api
             port:
               number: {{ .Values.api.service.port }}
     {{- end }}

@@ -2,29 +2,29 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "openg2p-connector.fullname" . }}-ui
+  name: {{ include "registry-connector.fullname" . }}-ui
   labels:
-    {{- include "openg2p-connector.labels" . | nindent 4 }}
+    {{- include "registry-connector.labels" . | nindent 4 }}
     app.kubernetes.io/component: ui
 spec:
   replicas: {{ .Values.ui.replicaCount }}
   selector:
     matchLabels:
-      {{- include "openg2p-connector.selectorLabels" . | nindent 6 }}
+      {{- include "registry-connector.selectorLabels" . | nindent 6 }}
       app.kubernetes.io/component: ui
   template:
     metadata:
       labels:
-        {{- include "openg2p-connector.selectorLabels" . | nindent 8 }}
+        {{- include "registry-connector.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: ui
     spec:
-      serviceAccountName: {{ include "openg2p-connector.serviceAccountName" . }}
+      serviceAccountName: {{ include "registry-connector.serviceAccountName" . }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       containers:
-        - name: connector-ui
+        - name: registry-connector-ui
           image: "{{ .Values.ui.image.repository }}:{{ .Values.ui.image.tag }}"
           imagePullPolicy: {{ .Values.ui.image.pullPolicy }}
           ports:

@@ -6,8 +6,8 @@ Connector for fetching and publishing data from external systems to OpenG2P Regi
 |------|------|
 | `api/` | Connector service (FastAPI + Celery) |
 | `ui/` | Admin UI for pipelines, runs, and DLQ |
-| `docker/` | Container images (`connector-service`, `connector-ui`) |
-| `deployments/charts/openg2p-connector` | Helm chart |
+| `docker/` | Container images (`registry-connector-api`, `registry-connector-ui`) |
+| `deployments/charts/registry-connector` | Helm chart |
 
 Packaging layout matches other OpenG2P Gen2 services (see
 [master-data-service](https://github.com/OpenG2P/master-data-service/tree/1.1)).
@@ -31,19 +31,19 @@ npm run dev
 
 ```bash
 # API / worker / beat / consumer (same image, role via container args)
-docker build -f docker/connector-service/Dockerfile \
-  -t openg2p/connector-service:develop .
+docker build -f docker/registry-connector-api/Dockerfile \
+  -t openg2p/registry-connector-api:develop .
 
 # Admin UI (context = ui/)
-docker build -f docker/connector-ui/Dockerfile \
-  -t openg2p/connector-ui:develop ui
+docker build -f docker/registry-connector-ui/Dockerfile \
+  -t openg2p/registry-connector-ui:develop ui
 ```
 
 ## Helm
 
 ```bash
-helm dependency update deployments/charts/openg2p-connector
-helm upgrade --install connector deployments/charts/openg2p-connector \
+helm dependency update deployments/charts/registry-connector
+helm upgrade --install registry-connector deployments/charts/registry-connector \
   --namespace <ns> \
   -f values-override.yaml
 ```

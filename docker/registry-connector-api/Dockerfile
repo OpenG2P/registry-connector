@@ -2,7 +2,7 @@ ARG PYTHON_IMAGE=python:3.10-slim
 FROM ${PYTHON_IMAGE}
 
 # Build from repo root:
-#   docker build -f docker/connector-service/Dockerfile -t openg2p/connector-service:develop .
+#   docker build -f docker/registry-connector-api/Dockerfile -t openg2p/registry-connector-api:develop .
 
 ARG CONNECTOR_PIP_EXTRAS=""
 
@@ -28,7 +28,7 @@ RUN python -m pip install --upgrade pip setuptools wheel \
         python -m pip install .; \
     fi
 
-COPY docker/connector-service/docker-entrypoint.sh /app/docker-entrypoint.sh
+COPY docker/registry-connector-api/docker-entrypoint.sh /app/docker-entrypoint.sh
 
 RUN useradd --create-home --home-dir /home/connector --shell /usr/sbin/nologin connector \
     && chmod +x /app/docker-entrypoint.sh \
