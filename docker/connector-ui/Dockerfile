@@ -1,3 +1,7 @@
+# Connector admin UI — Vite/nginx image.
+#
+# Built with docker context = ui (see .github/workflows/build-publish.yml).
+# Published as openg2p/connector-ui.
 FROM node:20-alpine AS builder
 
 WORKDIR /app

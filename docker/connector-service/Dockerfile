@@ -1,4 +1,8 @@
-FROM python:3.10-slim
+ARG PYTHON_IMAGE=python:3.10-slim
+FROM ${PYTHON_IMAGE}
+
+# Build from repo root:
+#   docker build -f docker/connector-service/Dockerfile -t openg2p/connector-service:develop .
 
 ARG CONNECTOR_PIP_EXTRAS=""
 
@@ -14,8 +18,8 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends tini \
     && rm -rf /var/lib/apt/lists/*
 
-COPY pyproject.toml README.md /app/
-COPY src /app/src
+COPY api/pyproject.toml api/README.md /app/
+COPY api/src /app/src
 
 RUN python -m pip install --upgrade pip setuptools wheel \
     && if [ -n "$CONNECTOR_PIP_EXTRAS" ]; then \
@@ -24,7 +28,7 @@ RUN python -m pip install --upgrade pip setuptools wheel \
         python -m pip install .; \
     fi
 
-COPY docker-entrypoint.sh /app/docker-entrypoint.sh
+COPY docker/connector-service/docker-entrypoint.sh /app/docker-entrypoint.sh
 
 RUN useradd --create-home --home-dir /home/connector --shell /usr/sbin/nologin connector \
     && chmod +x /app/docker-entrypoint.sh \

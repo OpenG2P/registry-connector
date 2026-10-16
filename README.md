@@ -6,6 +6,11 @@ Connector for fetching and publishing data from external systems to OpenG2P Regi
 |------|------|
 | `api/` | Connector service (FastAPI + Celery) |
 | `ui/` | Admin UI for pipelines, runs, and DLQ |
+| `docker/` | Container images (`connector-service`, `connector-ui`) |
+| `deployments/charts/openg2p-connector` | Helm chart |
+
+Packaging layout matches other OpenG2P Gen2 services (see
+[master-data-service](https://github.com/OpenG2P/master-data-service/tree/1.1)).
 
 ## Quick start
 
@@ -22,4 +27,25 @@ npm install
 npm run dev
 ```
 
-See `api/README.md` and `ui/README.md` for deploy and env details.
+## Build images
+
+```bash
+# API / worker / beat / consumer (same image, role via container args)
+docker build -f docker/connector-service/Dockerfile \
+  -t openg2p/connector-service:develop .
+
+# Admin UI (context = ui/)
+docker build -f docker/connector-ui/Dockerfile \
+  -t openg2p/connector-ui:develop ui
+```
+
+## Helm
+
+```bash
+helm dependency update deployments/charts/openg2p-connector
+helm upgrade --install connector deployments/charts/openg2p-connector \
+  --namespace <ns> \
+  -f values-override.yaml
+```
+
+See `api/README.md`, `api/DEPLOYMENT.md`, and `ui/README.md` for env and role details.
