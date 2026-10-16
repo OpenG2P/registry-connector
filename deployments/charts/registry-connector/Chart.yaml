@@ -14,7 +14,7 @@ icon: https://openg2p.github.io/openg2p-helm/openg2p-logo.png
 keywords:
   - openg2p
   - registry-connector
-- connector
+  - connector
   - ingestion
 maintainers:
   - email: info@openg2p.org
