@@ -1,30 +1,27 @@
 # Connector Deployment
 
-This directory now contains a container image definition for the Connector
-Service that your DevOps team can deploy as one or more runtime roles from the
-same image.
+Canonical image and Helm paths live at the repo root (Gen2 packaging layout):
 
-## Files
-
-- `Dockerfile`: builds the Connector image
-- `docker-entrypoint.sh`: selects the runtime role
-- `deploy.env.example`: deployment-oriented env example
+- `docker/registry-connector-api/Dockerfile` — runtime image (api / worker / beat / consumer)
+- `docker/registry-connector-api/docker-entrypoint.sh` — selects the runtime role
+- `deployments/charts/registry-connector` — Helm chart
+- `deploy.env.example` — deployment-oriented env example (this directory)
 
 ## Build
 
-Build the base image:
+Build from the **repository root**:
 
 ```bash
-docker build -t your-registry/openg2p-connector-service:latest ./openg2p-connector-service
+docker build -f docker/registry-connector-api/Dockerfile \
+  -t openg2p/registry-connector-api:latest .
 ```
 
 Build with optional extras when needed:
 
 ```bash
-docker build \
+docker build -f docker/registry-connector-api/Dockerfile \
   --build-arg CONNECTOR_PIP_EXTRAS=metrics,kafka \
-  -t your-registry/openg2p-connector-service:latest \
-  ./openg2p-connector-service
+  -t openg2p/registry-connector-api:latest .
 ```
 
 Supported extras match `pyproject.toml`:
@@ -54,12 +51,12 @@ Examples:
 
 ```bash
 # API (default, same as omitting the role)
-docker run ... your-registry/openg2p-connector-service:latest
-docker run ... your-registry/openg2p-connector-service:latest api
+docker run ... openg2p/registry-connector-api:latest
+docker run ... openg2p/registry-connector-api:latest api
 
 # Background jobs
-docker run ... your-registry/openg2p-connector-service:latest worker
-docker run ... your-registry/openg2p-connector-service:latest beat
+docker run ... openg2p/registry-connector-api:latest worker
+docker run ... openg2p/registry-connector-api:latest beat
 ```
 
 In Kubernetes, set the Deployment `args` to that role, for example
@@ -144,7 +141,7 @@ docker run -d \
   --name connector-api \
   --env-file deploy.env \
   -p 8050:8050 \
-  your-registry/openg2p-connector-service:latest
+  openg2p/registry-connector-api:latest
 ```
 
 Worker:
@@ -153,7 +150,7 @@ Worker:
 docker run -d \
   --name connector-worker \
   --env-file deploy.env \
-  your-registry/openg2p-connector-service:latest \
+  openg2p/registry-connector-api:latest \
   worker
 ```
 
@@ -163,7 +160,7 @@ Beat:
 docker run -d \
   --name connector-beat \
   --env-file deploy.env \
-  your-registry/openg2p-connector-service:latest \
+  openg2p/registry-connector-api:latest \
   beat
 ```
 
@@ -173,7 +170,7 @@ Event consumer:
 docker run -d \
   --name connector-consumer \
   --env-file deploy.env \
-  your-registry/openg2p-connector-service:latest \
+  openg2p/registry-connector-api:latest \
   consumer
 ```
 

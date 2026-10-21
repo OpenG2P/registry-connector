@@ -1,0 +1,47 @@
+{{- if .Values.beat.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "registry-connector.fullname" . }}-beat
+  labels:
+    {{- include "registry-connector.labels" . | nindent 4 }}
+    app.kubernetes.io/component: beat
+spec:
+  replicas: {{ .Values.beat.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "registry-connector.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: beat
+  template:
+    metadata:
+      labels:
+        {{- include "registry-connector.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: beat
+    spec:
+      serviceAccountName: {{ include "registry-connector.serviceAccountName" . }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.postgresCheckerInit.enabled }}
+      initContainers:
+        - name: postgres-checker
+          image: {{ .Values.postgresCheckerInit.image }}
+          imagePullPolicy: IfNotPresent
+          command: ["sh"]
+          args:
+            {{- include "registry-connector.postgresWaitArgs" . | nindent 12 }}
+          env:
+            {{- include "registry-connector.commonEnv" . | nindent 12 }}
+      {{- end }}
+      containers:
+        - name: connector-beat
+          image: {{ include "registry-connector.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+            {{- toYaml .Values.beat.args | nindent 12 }}
+          env:
+            {{- include "registry-connector.commonEnv" . | nindent 12 }}
+          resources:
+            {{- toYaml .Values.beat.resources | nindent 12 }}
+{{- end }}
