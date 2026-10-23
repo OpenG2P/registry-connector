@@ -75,12 +75,22 @@ class Settings(BaseSettings):
     metrics_enabled: bool = False
     metrics_path: str = "/metrics"
 
-    # --- Read-only metadata lookups ---
-    # Used to populate UI dropdowns for G2P envelope fields. If unset, the
-    # endpoints return an empty list and the UI falls back to free-text input
-    # with a warning. DSNs should use the async driver (postgresql+asyncpg).
-    master_data_db_dsn: str = ""
-    registry_db_dsn: str = ""
+    # --- Read-only metadata lookups (HTTP APIs, not DB queries) ---
+    # Partners: Partner Management staff-portal-api GET /partners?status=active
+    # Registers: Registry staff-api POST /register-metadata/get_all_registers
+    # If a base URL is blank, that endpoint returns configured=false and the
+    # UI falls back to free-text input with a warning.
+    partner_management_base_url: str = ""
+    registry_staff_api_base_url: str = ""
+    # Shared auth for the two metadata APIs. Prefer client-credentials for a
+    # service account; metadata_bearer_token skips the token exchange (dev).
+    metadata_token_url: str = ""
+    metadata_client_id: str = ""
+    metadata_client_secret: str = ""
+    metadata_client_scope: str = ""
+    metadata_bearer_token: str = ""
+    metadata_timeout_seconds: float = 10.0
+
 
     # Persist per-run payload snapshots for debugging (disable in prod if sensitive).
     store_run_payloads: bool = True

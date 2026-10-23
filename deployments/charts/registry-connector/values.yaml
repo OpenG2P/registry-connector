@@ -12,10 +12,16 @@ global:
   redisDb: 1
   # In-cluster Partner API service name (no scheme). Chart builds the base URL.
   partnerApiService: registry-partner-api
-  # Optional secret with DSNs for Connector UI metadata dropdowns.
-  metadataDsnSecret: ""
-  masterDataDsnKey: master_data_dsn
-  registryDsnKey: registry_db_dsn
+  # Optional in-cluster URLs for Connector UI metadata dropdowns (HTTP APIs).
+  # Partners: Partner Management staff-portal-api. Registers: Registry staff-api.
+  partnerManagementBaseUrl: ""
+  registryStaffApiBaseUrl: ""
+  # Optional secret with client-credentials (or a static bearer) for those APIs.
+  metadataAuthSecret: ""
+  metadataTokenUrlKey: token_url
+  metadataClientIdKey: client_id
+  metadataClientSecretKey: client_secret
+  metadataBearerTokenKey: bearer_token
 
 imagePullSecrets: []
 
@@ -33,6 +39,7 @@ commonEnv:
   CONNECTOR_FULL_SCAN_ON_INCREMENTAL_UNSUPPORTED: "false"
   CONNECTOR_METRICS_ENABLED: "false"
   CONNECTOR_CORS_ORIGINS: ""
+  CONNECTOR_METADATA_TIMEOUT_SECONDS: "10"
 
 postgresCheckerInit:
   enabled: true

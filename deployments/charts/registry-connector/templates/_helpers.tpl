@@ -96,16 +96,36 @@ app.kubernetes.io/instance: {{ .Release.Name }}
   value: {{ .Values.commonEnv.CONNECTOR_METRICS_ENABLED | quote }}
 - name: CONNECTOR_CORS_ORIGINS
   value: {{ .Values.commonEnv.CONNECTOR_CORS_ORIGINS | quote }}
-{{- if .Values.global.metadataDsnSecret }}
-- name: CONNECTOR_MASTER_DATA_DB_DSN
+- name: CONNECTOR_PARTNER_MANAGEMENT_BASE_URL
+  value: {{ tpl (.Values.global.partnerManagementBaseUrl | default "") . | quote }}
+- name: CONNECTOR_REGISTRY_STAFF_API_BASE_URL
+  value: {{ tpl (.Values.global.registryStaffApiBaseUrl | default "") . | quote }}
+- name: CONNECTOR_METADATA_TIMEOUT_SECONDS
+  value: {{ .Values.commonEnv.CONNECTOR_METADATA_TIMEOUT_SECONDS | default "10" | quote }}
+{{- if .Values.global.metadataAuthSecret }}
+- name: CONNECTOR_METADATA_TOKEN_URL
   valueFrom:
     secretKeyRef:
-      name: {{ .Values.global.metadataDsnSecret | quote }}
-      key: {{ .Values.global.masterDataDsnKey | quote }}
-- name: CONNECTOR_REGISTRY_DB_DSN
+      name: {{ .Values.global.metadataAuthSecret | quote }}
+      key: {{ .Values.global.metadataTokenUrlKey | quote }}
+      optional: true
+- name: CONNECTOR_METADATA_CLIENT_ID
   valueFrom:
     secretKeyRef:
-      name: {{ .Values.global.metadataDsnSecret | quote }}
-      key: {{ .Values.global.registryDsnKey | quote }}
+      name: {{ .Values.global.metadataAuthSecret | quote }}
+      key: {{ .Values.global.metadataClientIdKey | quote }}
+      optional: true
+- name: CONNECTOR_METADATA_CLIENT_SECRET
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.global.metadataAuthSecret | quote }}
+      key: {{ .Values.global.metadataClientSecretKey | quote }}
+      optional: true
+- name: CONNECTOR_METADATA_BEARER_TOKEN
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.global.metadataAuthSecret | quote }}
+      key: {{ .Values.global.metadataBearerTokenKey | quote }}
+      optional: true
 {{- end }}
 {{- end -}}

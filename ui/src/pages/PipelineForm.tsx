@@ -352,8 +352,8 @@ export default function PipelineForm() {
             required
             hint={
               partners?.configured === false
-                ? "Metadata DSN not set — type a mnemonic manually."
-                : "Must match an active partner in the registry."
+                ? "Partner Management API not configured — type a partner id manually."
+                : "Must match an active partner in Partner Management."
             }
           >
             <MetadataSelectOrInput
@@ -369,7 +369,7 @@ export default function PipelineForm() {
             required
             hint={
               registers?.configured === false
-                ? "Metadata DSN not set — type a register mnemonic manually."
+                ? "Registry staff API not configured — type a register mnemonic manually."
                 : undefined
             }
           >

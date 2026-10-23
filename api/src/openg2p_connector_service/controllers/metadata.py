@@ -2,82 +2,41 @@
 
 These endpoints let the Connector UI populate required form fields
 (``g2p_sender_id``, ``g2p_register_mnemonic``) with dropdowns sourced from
-the registry, so users can't type a mnemonic that doesn't exist.
+platform APIs, so users can't type a mnemonic that doesn't exist.
 
-Each endpoint uses a dedicated async engine pointed at the registry's
-databases via ``CONNECTOR_MASTER_DATA_DB_DSN`` / ``CONNECTOR_REGISTRY_DB_DSN``.
-If either DSN is blank the endpoint returns ``[]`` — the UI should then
-degrade to a free-text input with a warning.
+- Partners: Partner Management staff API
+  (``GET {CONNECTOR_PARTNER_MANAGEMENT_BASE_URL}/partners?status=active``).
+- Registers: Registry staff API
+  (``POST {CONNECTOR_REGISTRY_STAFF_API_BASE_URL}/register-metadata/get_all_registers``).
+
+If a base URL is blank the endpoint returns ``configured=false`` — the UI
+should then degrade to a free-text input with a warning.
 """
 
 from __future__ import annotations
 
-import logging
 from typing import Any
 
 from fastapi import APIRouter
-from sqlalchemy import text
-from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine
 
+from ..clients.metadata_client import fetch_partners, fetch_registers
 from ..config import get_settings
 from ..transports import get_transport_capability, transport_registry
 
 router = APIRouter(prefix="/metadata", tags=["metadata"])
-_logger = logging.getLogger("connector.metadata")
-
-
-_master_engine: AsyncEngine | None = None
-_registry_engine: AsyncEngine | None = None
-
-
-def _engine_for(dsn: str, cache_key: str) -> AsyncEngine | None:
-    """Return a cached read-only async engine, or None if DSN is blank."""
-    global _master_engine, _registry_engine
-    if not dsn:
-        return None
-    if cache_key == "master":
-        if _master_engine is None:
-            _master_engine = create_async_engine(dsn, pool_pre_ping=True, pool_size=2)
-        return _master_engine
-    if cache_key == "registry":
-        if _registry_engine is None:
-            _registry_engine = create_async_engine(dsn, pool_pre_ping=True, pool_size=2)
-        return _registry_engine
-    return None
 
 
 @router.get("/partners")
 async def list_partners() -> dict[str, Any]:
-    """Return active partners from master-data DB.
+    """Return active partners from Partner Management.
 
     Response shape::
 
-        {"configured": bool, "items": [{"value": "mnemonic", "label": "..."}]}
+        {"configured": bool, "items": [{"value": "partner_id", "label": "..."}]}
 
-    ``configured=false`` signals the UI that the DSN isn't set.
+    ``configured=false`` signals the UI that the PM base URL isn't set.
     """
-    settings = get_settings()
-    engine = _engine_for(settings.master_data_db_dsn, "master")
-    if engine is None:
-        return {"configured": False, "items": []}
-
-    try:
-        async with engine.connect() as conn:
-            result = await conn.execute(
-                text(
-                    "SELECT partner_mnemonic FROM g2p_partners "
-                    "WHERE is_active = true ORDER BY partner_mnemonic"
-                )
-            )
-            items = [
-                {"value": row[0], "label": row[0]} for row in result.fetchall()
-            ]
-    except SQLAlchemyError:
-        _logger.exception("Failed to read partners")
-        return {"configured": True, "items": [], "error": "query_failed"}
-
-    return {"configured": True, "items": items}
+    return await fetch_partners(get_settings())
 
 
 @router.get("/transports")
@@ -112,26 +71,5 @@ async def list_transports() -> dict[str, Any]:
 
 @router.get("/registers")
 async def list_registers() -> dict[str, Any]:
-    """Return register definitions from registry DB."""
-    settings = get_settings()
-    engine = _engine_for(settings.registry_db_dsn, "registry")
-    if engine is None:
-        return {"configured": False, "items": []}
-
-    try:
-        async with engine.connect() as conn:
-            result = await conn.execute(
-                text(
-                    "SELECT register_mnemonic, COALESCE(register_subject, register_mnemonic) "
-                    "FROM g2p_register_definitions ORDER BY register_mnemonic"
-                )
-            )
-            items = [
-                {"value": row[0], "label": f"{row[0]} — {row[1]}" if row[1] else row[0]}
-                for row in result.fetchall()
-            ]
-    except SQLAlchemyError:
-        _logger.exception("Failed to read registers")
-        return {"configured": True, "items": [], "error": "query_failed"}
-
-    return {"configured": True, "items": items}
+    """Return register definitions from Registry staff API."""
+    return await fetch_registers(get_settings())
