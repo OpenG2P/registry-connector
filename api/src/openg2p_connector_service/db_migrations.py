@@ -26,6 +26,25 @@ _STEPS: list[str] = [
     "ADD COLUMN IF NOT EXISTS redelivery_count INTEGER NOT NULL DEFAULT 0",
     "ALTER TABLE ingestion_runs "
     "ADD COLUMN IF NOT EXISTS run_payload_json TEXT",
+    # Aware UTC writes failed on TIMESTAMP WITHOUT TIME ZONE (asyncpg bind error),
+    # which rolled back poll commits and left last_poll_at stuck → re-ingest loops.
+    """
+    DO $$
+    BEGIN
+      IF EXISTS (
+        SELECT 1
+        FROM information_schema.columns
+        WHERE table_schema = current_schema()
+          AND table_name = 'connector_definitions'
+          AND column_name = 'last_poll_at'
+          AND data_type = 'timestamp without time zone'
+      ) THEN
+        ALTER TABLE connector_definitions
+          ALTER COLUMN last_poll_at TYPE TIMESTAMPTZ
+          USING last_poll_at AT TIME ZONE 'UTC';
+      END IF;
+    END $$
+    """,
 ]
 
 

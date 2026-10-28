@@ -37,7 +37,9 @@ class ConnectorDefinition(Base):
         String(64), nullable=False, default="hmac_sha256"
     )
 
-    last_poll_at: Mapped[str | None] = mapped_column(DateTime, nullable=True)
+    last_poll_at: Mapped[str | None] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )
     last_poll_status: Mapped[str | None] = mapped_column(String(32), nullable=True)
     last_poll_error: Mapped[str | None] = mapped_column(Text, nullable=True)
     last_poll_fetched: Mapped[int | None] = mapped_column(Integer, nullable=True)
